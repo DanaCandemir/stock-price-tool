@@ -64,7 +64,7 @@ test_obj = {
     'date': '12/23/1999'
 }
 
-# insert_stmt = insert()
+# TO DO: insert test obj into 'daily' table
 
 
 def fetch_data():
@@ -142,20 +142,3 @@ def low_high(time_series):
 
     print(f"52-week low: {min(lows)}\n52-week high: {max(highs)}")
     return (min(lows), max(highs))
-
-
-# slice_52 = slice_52_wk()
-# print(slice_52[0])
-
-# avg = get_avg(slice_52)
-# print(f"52 week average: {avg}")
-
-# low_high_52_wk = low_high(slice_52)
-# engine = get_engine()
-# metadata.create_all(engine)
-# insert_stmt = insert()
-# # Base.metadata.create_all(engine)
-# with engine.connect() as conn:
-#     result = conn.execute(text("SELECT * FROM ALERT_QT"))
-#     for row in result:
-#         print("row: ", row)
