@@ -7,8 +7,9 @@ metadata = MetaData()
 
 Base = declarative_base()
 
+# Table definition
 daily = Table('daily', metadata,
-              Column('id', Integer, primary_key=True),
+              Column('id', Integer, primary_key=True, autoincrement=True),
               Column('open', String(50)),
               Column('high', String(50)),
               Column('low', String(50)),
@@ -17,9 +18,9 @@ daily = Table('daily', metadata,
               Column('date', String(50)))
 
 
-class Test123(Base):
-    __tablename__ = "test123"
-    id = Column(Integer, primary_key=True)
+class Daily(Base):
+    __tablename__ = "daily"
+    id = Column(Integer, primary_key=True, autoincrement=True)
     open = Column(String(50))
     high = Column(String(50))
     low = Column(String(50))
@@ -49,7 +50,6 @@ def get_engine():
 
 engine = get_engine()
 connection = engine.connect()
-metadata.create_all(engine)
 
 test_obj = {
     'open': '123',
@@ -60,4 +60,14 @@ test_obj = {
     'date': '12/23/1999'
 }
 
+
 # TO DO: insert test obj into 'daily' table
+with engine.connect() as conn:
+    conn.execute(insert(daily).values(test_obj))
+    conn.commit()
+
+# --- Read and Print Rows ---
+with engine.connect() as conn:
+    result = conn.execute(text("SELECT * FROM daily"))
+    for row in result.mappings():
+        print(row)  # Already a dict-like object
