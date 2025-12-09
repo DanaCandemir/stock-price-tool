@@ -63,7 +63,7 @@ def get_avg(time_series):
     close_prc = []
 
     for day in time_series:
-        close_prc.append(float(day["4. close"]))
+        close_prc.append(float(day["close"]))
 
     return (sum(close_prc)/len(close_prc))
 
@@ -75,8 +75,8 @@ def low_high(time_series):
     highs = []
 
     for day in time_series:
-        highs.append(float(day["2. high"]))
-        lows.append(float(day["3. low"]))
+        highs.append(float(day["high"]))
+        lows.append(float(day["low"]))
 
     print(f"52-week low: {min(lows)}\n52-week high: {max(highs)}")
     return (min(lows), max(highs))

@@ -18,17 +18,6 @@ daily = Table('daily', metadata,
               Column('date', String(50)))
 
 
-class Daily(Base):
-    __tablename__ = "daily"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    open = Column(String(50))
-    high = Column(String(50))
-    low = Column(String(50))
-    close = Column(String(50))
-    volume = Column(String(50))
-    date = Column(String(50))
-
-
 def get_engine():
     username = "SYS"
     password = "ReallyLongPW@1!"  # Consider using environment variables later
