@@ -69,7 +69,8 @@ def get_avg(time_series):
 
 
 def low_high(time_series):
-    '''Prints and returns the low and high for the time series
+    '''
+    Prints and returns the low and high for the time series
     '''
     lows = []
     highs = []

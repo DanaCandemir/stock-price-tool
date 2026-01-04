@@ -1,7 +1,7 @@
-import oracledb
-from sqlalchemy import URL, Column, Integer, String, create_engine, text, MetaData, insert, Table
+from sqlalchemy import URL, Column, Integer, Identity, String, create_engine, text, MetaData, insert, Table
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.engine import URL
+from time_series_stats import slice_52_wk
 
 metadata = MetaData()
 
@@ -9,7 +9,8 @@ Base = declarative_base()
 
 # Table definition
 daily = Table('daily', metadata,
-              Column('id', Integer, primary_key=True, autoincrement=True),
+              Column('id', Integer, Identity(start=1),
+                     primary_key=True),
               Column('open', String(50)),
               Column('high', String(50)),
               Column('low', String(50)),
@@ -19,8 +20,8 @@ daily = Table('daily', metadata,
 
 
 def get_engine():
-    username = "SYS"
-    password = "ReallyLongPW@1!"  # Consider using environment variables later
+    username = "dana"
+    password = "MyStrongPW1!"  # Consider using environment variables later
     host = "localhost"
     port = "1521"
     service_name = "freepdb1"
@@ -34,12 +35,16 @@ def get_engine():
         query={"service_name": service_name}
     )
 
-    return create_engine(connection_url, connect_args={"mode": oracledb.AUTH_MODE_SYSDBA}, echo=True)
+    return create_engine(connection_url, echo=True)
 
 
 engine = get_engine()
 connection = engine.connect()
 
+# Create table if it doesn't exist
+metadata.create_all(engine)
+
+# test data for database instantiation
 test_obj = {
     'open': '123',
     'high': '234',
@@ -50,13 +55,24 @@ test_obj = {
 }
 
 
-# TO DO: insert test obj into 'daily' table
-with engine.connect() as conn:
-    conn.execute(insert(daily).values(test_obj))
-    conn.commit()
+def read_db():
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM daily"))
+        for row in result.mappings():
+            print(row)
 
-# --- Read and Print Rows ---
-with engine.connect() as conn:
-    result = conn.execute(text("SELECT * FROM daily"))
-    for row in result.mappings():
-        print(row)  # Already a dict-like object
+
+# seed_data to be a list of dictionary entries
+# as oracle refuses to insert multiple records at once
+def seed_db(seed_data):
+    with engine.connect() as conn:
+        for row in seed_data:
+            conn.execute(insert(daily).values(row))
+            conn.commit()
+
+
+def restore_daily():
+    daily.drop(engine, checkfirst=True)
+    metadata.create_all(engine)
+    sliced_data = slice_52_wk()
+    seed_db(sliced_data)
