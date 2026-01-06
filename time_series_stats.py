@@ -5,24 +5,23 @@ from datetime import date
 today = date.today()
 
 
-def fetch_data():
+def fetch_data(symbol):
     api_key = "ZAWB70NZ1KPQXI4O"
     interval = "Daily"
-    symbol = "IBM"
     function = "TIME_SERIES_DAILY"
-    output_size = "full"
-    url = f'https://www.alphavantage.co/query?function={function}&symbol={symbol}&interval={interval}&outputsize={output_size}&apikey={api_key}'
+    url = f'https://www.alphavantage.co/query?function={function}&symbol={symbol}&interval={interval}&apikey={api_key}'
+    filename = f"time_series_JSON/{symbol}.json"
 
     r = requests.get(url)
     data = r.json()
+    print(data)
 
     # saving json locally to get around throttling by API while testing
-    filename = "output.json"
     with open(filename, "w") as f:
         json.dump(data, f, indent=4)
 
 
-def slice_52_wk():
+def slice_52_wk(symbol):
     '''
     Slice the most recent 52 dates from the dict 
     '''
@@ -37,7 +36,7 @@ def slice_52_wk():
     last_year = "-".join(today)
 
     # refactored this piece of code to utilize output.json instead of storing the response in memory to call API less.
-    filename = "output.json"
+    filename = f"time_series_JSON/{symbol}.json"
     with open(filename, "r") as f:
         data = json.load(f)
 

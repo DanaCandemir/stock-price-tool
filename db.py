@@ -57,13 +57,17 @@ test_obj = {
 
 def read_db():
     with engine.connect() as conn:
+        arr = []
         result = conn.execute(text("SELECT * FROM daily"))
-        for row in result.mappings():
-            print(row)
 
+        for row in result.mappings():
+            arr.append(row)
+        return arr
 
 # seed_data to be a list of dictionary entries
 # as oracle refuses to insert multiple records at once
+
+
 def seed_db(seed_data):
     with engine.connect() as conn:
         for row in seed_data:

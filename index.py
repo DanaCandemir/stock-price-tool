@@ -1,6 +1,6 @@
 # import json
-# from time_series_stats import slice_52_wk, get_avg, low_high, fetch_data
-from db import seed_db, read_db, restore_daily
+from time_series_stats import slice_52_wk, get_avg, low_high, fetch_data
+# from db import seed_db, read_db, restore_daily
 
 
 # with open('output.json', 'r') as f:
@@ -13,4 +13,8 @@ from db import seed_db, read_db, restore_daily
 #     seed_db(sliced_data)
 
 
-read_db()
+# read_db()
+
+fetch_data("AAPL")
+
+# print(slice_52_wk("NVDA"))
